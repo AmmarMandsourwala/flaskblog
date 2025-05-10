@@ -7,11 +7,13 @@ app.config["SECRET_KEY"]="872fa1955c0d33996a1f8172cf000e4f"             # here a
 posts=[{
     "author":"Ammar",
     "title":"blogpost1",
-    "dateposted":"feb 2025"
+    "content":"First post content",
+    "date_posted":"feb 2025"
 },{
-    "author":"mustafa",
+    "author":"Mustafa",
     "title":"blogpost2",
-    "dateposted":"mar 2025"
+    "content":"Second post content",
+    "date_posted":"mar 2025"
 }]
 
 @app.route("/")
@@ -31,10 +33,16 @@ def register():
         return redirect(url_for("home"))
     return render_template("register.html",title="Register",form=form)
 
-@app.route("/login")
+@app.route("/login",methods=['GET','POST'])
 def login():
     form=Loginform()
+    if form.validate_on_submit():
+        if form.email.data=="admin@blog.com" and form.password.data=="password":
+            flash(f'You have been logged in successfully',"success")
+            return redirect(url_for('home'))
+        else:
+            flash(f'Login Unsuccessfull. Please check email and password',"danger")
     return render_template("login.html",title="login",form=form)
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=True)              # this is written so that after shutting terminal we do not need to run it again
